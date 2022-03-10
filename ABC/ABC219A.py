@@ -1,0 +1,5 @@
+n=int(input())
+if 0<=n<40:print(40-n)
+elif 40<=n<70:print(70-n)
+elif 70<=n<90:print(90-n)
+elif 90<=n:print("expert")
