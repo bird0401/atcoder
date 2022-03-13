@@ -7,10 +7,9 @@
 - ナップザックは多次元になるとMLEの恐れがあるので１次元でpypyが良い
 - infもっと多い場合もあるので注意
 
-## テンプレ
+## 入出力
 
 ```
-mod=998244353  
 mod=10**9+7  
 inf=10**9  
   
@@ -250,6 +249,22 @@ while i*i<=g:
         while g%i==0:g//=i
     i+=1
 print(ans+(g>1))
+```
+
+##　素因数分解
+
+```
+def prime_fact(n):
+    i=2
+    primes=[]
+    while n!=1:
+        cnt=0
+        while n%i==0:
+            cnt+=1    
+            n/=i
+        primes.append([i,cnt])
+        i+=1
+    return primes
 ```
 
 ## 尺取法
