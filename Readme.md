@@ -19,6 +19,31 @@ n,m=map(int,input().split())
 c=[list(map(int, input().split())) for _ in range(n)] 
 ```
 
+```
+#include<bits/stdc++.h>
+using namespace std;
+
+int mod=10^9+7;
+int inf=10^9;
+
+int n;
+cin>>n;
+
+vector<int>x(n);
+for(int i=0,i++,i<n){
+    cin>>x[i];
+}
+
+int n,m;
+cin>>n>>m;
+vector<vector<int>>x(n,vector<int>(m));
+for(i=0,i++,i<n){
+    for(j=0,j++,j<m){
+        cin>>x[i][j];
+    }
+}
+```
+
 ## 最大部分列和
 
 ```
