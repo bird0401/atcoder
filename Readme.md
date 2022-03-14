@@ -26,10 +26,12 @@ c=[list(map(int, input().split())) for _ in range(n)]
 
 ```
 #include<bits/stdc++.h>
+#define REP(i, n) for(long long i = 0; (i) < (long long)(n); (i)++)
 using namespace std;
+using ll = long long;
 
-int mod=10^9+7;
-int inf=10^9;
+int mod=1e9+7;
+int inf=1e9;
 
 int n;
 cin>>n;
