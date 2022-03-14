@@ -1,3 +1,8 @@
+## 使用言語
+- Python
+- C++
+- Rust
+
 ## 直近で知った気をつけること
 - ２部グラフによるグラフ彩色は深さ優先探索を使う
 - xy[x-1][y-1]=1;xy[y-1][x-1]=1
@@ -17,6 +22,38 @@ n=int(input())
 x=list(map(int, input().split()))  
 n,m=map(int,input().split())  
 c=[list(map(int, input().split())) for _ in range(n)] 
+```
+
+```
+#include<bits/stdc++.h>
+#define REP(i, n) for(long long i = 0; (i) < (long long)(n); (i)++)
+using namespace std;
+using ll = long long;
+
+int mod=1e9+7;
+int inf=1e9;
+
+int n;
+cin>>n;
+
+vector<int>x(n);
+for(int i=0,i++,i<n){
+    cin>>x[i];
+}
+
+int n,m;
+cin>>n>>m;
+vector<vector<int>>x(n,vector<int>(m));
+for(i=0,i++,i<n){
+    for(j=0,j++,j<m){
+        cin>>x[i][j];
+    }
+}
+```
+
+## ワーシャルフロイド
+```
+rep(k,10){rep(i,10){rep(j,10){c[i][j]=min(c[i][j],c[i][k]+c[k][j]);}}}
 ```
 
 ## 最大部分列和
