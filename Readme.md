@@ -26,29 +26,32 @@ c=[list(map(int, input().split())) for _ in range(n)]
 
 ```
 #include<bits/stdc++.h>
-#define REP(i, n) for(long long i = 0; (i) < (long long)(n); (i)++)
 using namespace std;
-using ll = long long;
+#define ll long long
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+ll mod=1e9+7
+ll inf=1e9
 
-int mod=1e9+7;
-int inf=1e9;
+int main(){
+  int n;
+  cin>>n;
 
-int n;
-cin>>n;
+  vector<int>x(n);
+  rep(i,n){
+      cin>>x[i];
+  }
 
-vector<int>x(n);
-for(int i=0,i++,i<n){
-    cin>>x[i];
+  int n,m;
+  cin>>n>>m;
+  vector<vector<int>>x(n,vector<int>(m));
+  rep(i,n){
+      rep(j,m){
+          cin>>x[i][j];
+      }
+  }
+  return 0;
 }
 
-int n,m;
-cin>>n>>m;
-vector<vector<int>>x(n,vector<int>(m));
-for(i=0,i++,i<n){
-    for(j=0,j++,j<m){
-        cin>>x[i][j];
-    }
-}
 ```
 
 ## ワーシャルフロイド
