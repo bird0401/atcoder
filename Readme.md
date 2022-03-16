@@ -29,8 +29,9 @@ c=[list(map(int, input().split())) for _ in range(n)]
 using namespace std;
 #define ll long long
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
-ll mod=1e9+7
-ll inf=1e9
+ll mod=1e9+7;
+ll inf=1e9;
+ll N=101010;
 
 int main(){
   int n;
@@ -53,7 +54,20 @@ int main(){
 }
 
 ```
-
+## エラトステネスの篩
+```
+vector<int> Eratosthenes(int n){
+    vector<int> is_prime(n+1,1);
+    is_prime[0]=is_prime[1]=0;
+    for(int i=2;i<n;i++){
+        if(is_prime[i]==0) continue;
+        for(int j=i*2;j<n;j+=i){
+            is_prime[j]=0;
+        }
+    }
+    return is_prime;
+}
+```
 ## ワーシャルフロイド
 ```
 rep(k,10){rep(i,10){rep(j,10){c[i][j]=min(c[i][j],c[i][k]+c[k][j]);}}}
