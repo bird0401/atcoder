@@ -26,31 +26,48 @@ c=[list(map(int, input().split())) for _ in range(n)]
 
 ```
 #include<bits/stdc++.h>
-#define REP(i, n) for(long long i = 0; (i) < (long long)(n); (i)++)
 using namespace std;
-using ll = long long;
+#define ll long long
+#define rep(i, n) for (int i = 0; i < (int)(n); i++)
+ll mod=1e9+7;
+ll inf=1e9;
+ll N=101010;
 
-int mod=1e9+7;
-int inf=1e9;
+int main(){
+  int n;
+  cin>>n;
 
-int n;
-cin>>n;
+  vector<int>x(n);
+  rep(i,n){
+      cin>>x[i];
+  }
 
-vector<int>x(n);
-for(int i=0,i++,i<n){
-    cin>>x[i];
+  int n,m;
+  cin>>n>>m;
+  vector<vector<int>>x(n,vector<int>(m));
+  rep(i,n){
+      rep(j,m){
+          cin>>x[i][j];
+      }
+  }
+  return 0;
 }
 
-int n,m;
-cin>>n>>m;
-vector<vector<int>>x(n,vector<int>(m));
-for(i=0,i++,i<n){
-    for(j=0,j++,j<m){
-        cin>>x[i][j];
+```
+## エラトステネスの篩
+```
+vector<int> Eratosthenes(int n){
+    vector<int> is_prime(n+1,1);
+    is_prime[0]=is_prime[1]=0;
+    for(int i=2;i<n;i++){
+        if(is_prime[i]==0) continue;
+        for(int j=i*2;j<n;j+=i){
+            is_prime[j]=0;
+        }
     }
+    return is_prime;
 }
 ```
-
 ## ワーシャルフロイド
 ```
 rep(k,10){rep(i,10){rep(j,10){c[i][j]=min(c[i][j],c[i][k]+c[k][j]);}}}
