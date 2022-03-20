@@ -34,23 +34,21 @@ ll inf=1e9;
 ll N=101010;
 
 int main(){
-  int n;
-  cin>>n;
+    int n;
+    cin>>n;
 
-  vector<int>x(n);
-  rep(i,n){
-      cin>>x[i];
-  }
+    vector<int>x(n);
+    rep(i,n){
+    cin>>x[i];
+    }
 
-  int n,m;
-  cin>>n>>m;
-  vector<vector<int>>x(n,vector<int>(m));
-  rep(i,n){
-      rep(j,m){
-          cin>>x[i][j];
-      }
-  }
-  return 0;
+    int h,w;
+    cin>>h>>w;
+    vector<vector<int>>x(h,vector<int>(w));
+    rep(i,h) rep(j,w){
+        cin>>x[i][j];
+    }
+    return 0;
 }
 
 ```
@@ -467,6 +465,35 @@ def bfs(si,sj,gi,gj):
                     q.append((ni,nj))
     return m[gi][gj]
 ```    
+
+```
+using Node=pair<int,int>;
+deque<Node>q;
+q.push_front(Node(si,sj));
+vector<vector<int>> d={{-1,0},{1,0},{0,-1},{0,1}};
+vector<vector<int>> dist(h,vector<int>(w,inf));dist[si][sj]=0;
+while (!q.empty()){
+    auto [pi,pj]=q.front();q.pop_front();
+    rep(i,4){
+        ni=pi+d[i][0];nj=pj+d[i][1];
+        if (ni>=0 && ni<h && nj>=0 && nj<w){
+            if (x[ni][nj]!='#'){
+                if (dist[ni][nj]>dist[pi][pj]){
+                    dist[ni][nj]=dist[pi][pj];
+                    q.push_front(Node(ni,nj));
+                }
+            }
+            else{
+                if (dist[ni][nj]>dist[pi][pj]+1){
+                    dist[ni][nj]=dist[pi][pj]+1;
+                    q.push_back(Node(ni,nj));
+                }
+            }
+        }
+    }
+}
+```
+
 
 ## 深さ優先探索
 
