@@ -1,7 +1,9 @@
 ## 使用言語
 - Python
 - C++
+- Java
 - Rust
+- Go
 
 ## 直近で知った気をつけること
 - ２部グラフによるグラフ彩色は深さ優先探索を使う
@@ -48,9 +50,9 @@ int main(){
     rep(i,h) rep(j,w){
         cin>>x[i][j];
     }
+    cout<<res<<endl;
     return 0;
 }
-
 ```
 ## エラトステネスの篩
 ```
@@ -344,6 +346,14 @@ def combination(n,r):
 ```
 from itertools import permutations
 per=sorted(set(permutations(sorted(s))))
+```
+
+```
+do{
+    string s;
+    rep(i,k) s+=x[i];
+    res.insert(s);
+}while(next_permutation(x.begin(),x.end()));
 ```
 
 ## ビット全探索
