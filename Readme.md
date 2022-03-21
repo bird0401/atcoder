@@ -50,9 +50,9 @@ int main(){
     rep(i,h) rep(j,w){
         cin>>x[i][j];
     }
+    cout<<res<<endl;
     return 0;
 }
-
 ```
 ## エラトステネスの篩
 ```
@@ -346,6 +346,14 @@ def combination(n,r):
 ```
 from itertools import permutations
 per=sorted(set(permutations(sorted(s))))
+```
+
+```
+do{
+    string s;
+    rep(i,k) s+=x[i];
+    res.insert(s);
+}while(next_permutation(x.begin(),x.end()));
 ```
 
 ## ビット全探索
