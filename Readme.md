@@ -40,9 +40,7 @@ int main(){
     cin>>n;
 
     vector<int>x(n);
-    rep(i,n){
-    cin>>x[i];
-    }
+    rep(i,n) cin>>x[i];
 
     int h,w;
     cin>>h>>w;
