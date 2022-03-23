@@ -31,6 +31,7 @@ c=[list(map(int, input().split())) for _ in range(n)]
 using namespace std;
 #define ll long long
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
+#define all(a)  (a).begin(),(a).end()
 ll mod=1e9+7;
 ll inf=1e9;
 ll N=101010;
@@ -108,6 +109,13 @@ for i in range(len(seq)):
     else:
         LIS[bisect.bisect_left(LIS, seq[i])] = seq[i]
 ```        
+
+```
+sort(all(x));
+vector<int>LIS(n,inf);
+rep(i,n) *lower_bound(all(LIS),x[i].second)=x[i].second;
+int res=find(all(LIS),inf)-LIS.begin();
+```
 
 ## 隣接リスト
 二人同士の関係性も管理可能
