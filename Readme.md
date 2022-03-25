@@ -53,6 +53,17 @@ int main(){
     return 0;
 }
 ```
+
+```
+struct st{
+    int r,h,id;
+};
+
+bool cmp(st p,st q){
+    if (p.r!=q.r) return p.r>q.r;
+    else return p.h<q.h;
+}
+```
 ## エラトステネスの篩
 ```
 vector<int> Eratosthenes(int n){
@@ -115,6 +126,17 @@ sort(all(x));
 vector<int>LIS(n,inf);
 rep(i,n) *lower_bound(all(LIS),x[i].second)=x[i].second;
 int res=find(all(LIS),inf)-LIS.begin();
+```
+
+左降順ソート、右についてLISを用いる。https://atcoder.jp/contests/joisc2016/tasks/joisc2016_a
+```
+for(i=0,j=0;i<q;i++) {
+    for(;j<n;j++) {
+        if (a[j].r<b[i].r) break;
+        *upper_bound(all(LIS),a[j].h)=a[j].h;
+    }
+    res[b[i].id]=upper_bound(all(LIS),b[i].h)-LIS.begin();
+}
 ```
 
 ## 隣接リスト
