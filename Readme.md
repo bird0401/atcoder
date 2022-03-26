@@ -64,6 +64,31 @@ bool cmp(st p,st q){
     else return p.h<q.h;
 }
 ```
+
+## nからk個を区別する場合の分け方
+
+```
+def n_same_k_different(n, k):
+    ans = []
+    if k == 1:
+        return [[n]]
+    for i in range(n+1):
+        for j in n_same_k_different(n-i, k-1):
+            ans.append([i]+j)
+    return ans
+```
+
+## 分割数
+
+```
+dp = [[1]*(1001) for _ in range(1001)]
+# dp[0][0]=1
+for n in range(1,1001):
+    for k in range(1001):
+        if n-k>=0: dp[n][k] = (dp[n - 1][k - 1] + dp[n - k][k]) % mod
+        else: dp[n][k] = dp[n - 1][k - 1]
+```
+
 ## エラトステネスの篩
 ```
 vector<int> Eratosthenes(int n){
