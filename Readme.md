@@ -65,6 +65,27 @@ bool cmp(st p,st q){
 }
 ```
 
+## 2人ゲームDP
+```
+dp[A][B]=0;
+// dp[i][j] = Aからi個、Bからj個取った状態から最後までの先攻の最適スコア
+for (int i=A;i>=0;i--) {
+    for (int j=B;j>=0;j--) {
+        if (i==A && j==B) continue;
+        if ((i+j)%2==0){
+            if (i==A) dp[i][j]=dp[i][j+1]+b[j];
+            else if (j==B) dp[i][j]=dp[i+1][j]+a[i];
+            else dp[i][j]=max(dp[i+1][j]+a[i],dp[i][j+1]+b[j]);
+        }
+        else{
+            if (i==A) dp[i][j]=dp[i][j+1];
+            else if (j==B) dp[i][j]=dp[i+1][j];
+            else dp[i][j]=min(dp[i+1][j],dp[i][j+1]);
+        }
+    }
+}
+```
+
 ## nからk個を区別する場合の分け方
 
 ```
