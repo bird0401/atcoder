@@ -66,6 +66,37 @@ bool cmp(st p,st q){
 }
 ```
 
+## 周期的に変化する値を求める
+```
+vector<int>nex(100000);
+rep(i,100000) {nex[i]+=(i+digit_sum(i))%100000;}
+
+vector<int> time_stamp(100000,-1);
+int cnt=0,pos=n;
+while(time_stamp[pos]==-1){
+    time_stamp[pos]=cnt;
+    pos=nex[pos];
+    cnt++;
+}
+
+int cycle=cnt-time_stamp[pos];
+if (k>=cycle) k=(k-time_stamp[pos])%cycle+time_stamp[pos];
+
+int res;
+rep(i,100000) {if(time_stamp[i]==k) res=i;}
+```
+
+## 全ての桁の和
+```
+int digit_sum(int n){
+    int sum=0;
+    while(n!=0){
+        sum+=n%10;n/=10;
+    }
+    return sum;
+}
+```
+
 ## 区間DP
 ```
 // メモ化再帰 dp[l][r]で[l,r)でいくつ取り除けるか
