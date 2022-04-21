@@ -57,6 +57,26 @@ bool cmp(st p,st q){
 }
 ```
 
+## DFSで出発地点と同じ場所の戻る時の最長距離を求める
+```
+int dfs(int sx, int sy, int px, int py) {
+    cout<<sx<<" "<<sy<<" "<<px<<" "<<py<<endl;
+	if (sx == px && sy == py && used[px][py]) return 0;
+	used[px][py] = true;
+
+	int ret = -10000;
+	for (int i = 0; i < 4; i++) {
+		int nx = px + dx[i], ny = py + dy[i];
+		if (nx < 0 || ny < 0 || nx >= H || ny >= W || c[nx][ny] == '#') continue;
+		if ((sx != nx || sy != ny) && used[nx][ny] == true) continue;
+		int v = dfs(sx, sy, nx, ny);
+		ret = max(ret, v + 1);
+	}
+	used[px][py] = false;
+	return ret;
+}
+```
+
 ## 周期的に変化する値を求める
 ```
 vector<int>nex(100000);
