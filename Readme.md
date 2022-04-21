@@ -5,15 +5,6 @@
 - Rust
 - Go
 
-## 直近で知った気をつけること
-- ２部グラフによるグラフ彩色は深さ優先探索を使う
-- xy[x-1][y-1]=1;xy[y-1][x-1]=1
-- from collections import defaultdict
-- d=defaultdict(int)
-- appendleftとappendを使い分けると高速化できる
-- ナップザックは多次元になるとMLEの恐れがあるので１次元でpypyが良い
-- infもっと多い場合もあるので注意
-
 ## 入出力
 
 ```
