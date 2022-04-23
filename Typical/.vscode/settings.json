@@ -13,6 +13,8 @@
         "initializer_list": "cpp",
         "regex": "cpp",
         "valarray": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "*.tcc": "cpp",
+        "iostream": "cpp"
     }
 }
