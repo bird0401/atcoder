@@ -1,7 +1,6 @@
 ## 使用言語
 - Python
 - C++
-- Java
 - Rust
 - Go
 
