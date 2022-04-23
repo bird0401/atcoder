@@ -26,7 +26,6 @@ using namespace std;
 #define all(a)  (a).begin(),(a).end()
 ll mod=1e9+7;
 ll inf=1e9;
-ll N=101010;
 
 int main(){
     int n;
@@ -47,6 +46,16 @@ int main(){
 ```
 
 ```
+int N, M, a, b;
+cin >> N >> M;
+for (int i = 1; i <= M; i++) {
+	cin >> a >> b;
+	G[a].push_back(b);
+	H[b].push_back(a);
+}
+```
+
+```
 struct st{
     int r,h,id;
 };
@@ -54,6 +63,97 @@ struct st{
 bool cmp(st p,st q){
     if (p.r!=q.r) return p.r>q.r;
     else return p.h<q.h;
+}
+```
+
+## 座標圧縮
+```
+int W, N;
+cin >> W >> N;
+vector<int> L(N), R(N);
+vector<int> compression;
+for (int i = 0; i < N; ++i) {
+	cin >> L[i] >> R[i];
+	--L[i];
+compression.push_back(L[i]);
+	compression.push_back(R[i]);
+}
+
+sort(compression.begin(), compression.end());
+compression.erase(unique(compression.begin(), compression.end()), compression.end()); //leave unique value
+
+// for (auto& e:compression) cout<<e<<" ";
+// cout<<endl;
+
+for (int i = 0; i < N; ++i) {
+	L[i] = lower_bound(compression.begin(), compression.end(), L[i]) - compression.begin();
+	R[i] = lower_bound(compression.begin(), compression.end(), R[i]) - compression.begin();
+// cout<<L[i]<<" "<<R[i]<<endl;
+}
+vector<int> h(compression.size() - 1);
+for (int i = 0; i < N; ++i) {
+	int height = *max_element(h.begin() + L[i], h.begin() + R[i]) + 1;
+	fill(h.begin() + L[i], h.begin() + R[i], height);
+	cout << height << '\n';
+}
+// for (auto& e:h) cout<<e<<" ";
+// cout<<endl;
+	
+```
+
+## 強連結成分分解（SCC）
+```
+bool used[100009];
+vector<int> G[100009];
+vector<int> H[100009];
+vector<int> I;
+long long cnts = 0;
+
+void dfs(int pos) {
+	used[pos] = true;
+	for (int i : G[pos]) {
+		if (!used[i]) dfs(i);
+	}
+	I.push_back(pos);
+}
+
+void dfs2(int pos) {
+	used[pos] = true;
+	cnts++;
+	for (int i : H[pos]) {
+		if (used[i] == false) dfs2(i);
+	}
+}
+
+int main() {
+	// Step #1. Input
+    int N, M, a, b;
+	cin >> N >> M;
+	for (int i = 1; i <= M; i++) {
+		cin >> a >> b;
+		G[a].push_back(b);
+		H[b].push_back(a);
+	}
+
+	// Step #2. First DFS
+	for (int i = 1; i <= N; i++) {
+		if (!used[i]) dfs(i);
+	}
+
+	// Step #3. Second DFS
+	ll res = 0;
+	reverse(I.begin(), I.end());
+	for (int i = 1; i <= N; i++) used[i] = false;
+	for (int i : I) {
+		if (used[i] == true) continue;
+		cnts = 0;
+		dfs2(i);
+		res += cnts * (cnts - 1LL) / 2LL;
+	}
+
+	// Step #4. Output The Answer!
+	cout << res << endl;
+	return 0;
 }
 ```
 
@@ -593,6 +693,26 @@ desc = int(''.join(sorted(str(n), reverse = True)))
 ```
 
 ## ダイクストラ法
+
+```
+void dijkstra(int st){
+    priority_queue<pair<ll,int>, vector<pair<ll,int>>, greater<pair<ll,int>>> Q;
+    rep(i,100009) dist[i]=inf;
+    dist[st]=0;
+    Q.push(make_pair(0,st));
+    while (!Q.empty()) {
+        int pos=Q.top().second;Q.pop();
+        rep(i,G[pos].size()){
+            int to=G[pos][i].first;
+            ll cost=G[pos][i].second;
+            if (dist[to]>dist[pos]+cost){
+                dist[to]=dist[pos]+cost;
+                Q.push(make_pair(dist[to],to));
+            }
+        }
+    }
+}
+```
 
 ```
 graph=[[] for _ in range(n)]
