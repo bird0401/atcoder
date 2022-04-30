@@ -483,7 +483,7 @@ for edge in edges:
 print(cost)
 ```
 
-## 90度回転
+## 90度
 
 ```
 list(zip(*s[::-1]))
@@ -555,9 +555,63 @@ print(int('0xff', 16))          # 16進数 -> 10進数
 ## 回転
 
 ```
+vector<float> affine(float x, float y){
+    float p[2]={x,y};
+    int degree=45;
+    float radian = degree * (M_PI / 180);
+    float cos45=cos(radian),sin45=sin(radian);
+    float af[2][2]={{cos45,-sin45},{sin45,cos45}};
+    vector<float> res(2);
+    rep(j,2) rep(k,2) {
+        res[j]+=af[j][k]*p[k];
+    }
+    return res;
+}
+```
+
+```
 cos60,sin60=cos(radians(60)),sin(radians(60))
     af=[[cos60,-sin60],[sin60,cos60]]
 ```    
+
+## マンハッタン距離最大
+
+```
+vector<ll> rotate45_manhattan(ll x,ll y){
+    vector<ll> res(2);
+    res[0]=x+y;
+    res[1]=-x+y;
+    return res;
+}
+
+int main() {
+	cin >> N >> Q;
+
+	rrep(i,1,N+1) cin >> X[i] >> Y[i];
+	rrep(i,1,Q+1) cin >> T[i];
+
+	rrep(i,1,N+1) {
+        vector<ll> P(2);
+        P = rotate45_manhattan(X[i],Y[i]);
+        // for (auto& e:P) cout<<e<<" ";
+        // cout<<endl;
+		X[i] = P[0], Y[i] = P[1];
+		min_X = min(min_X, X[i]);
+		max_X = max(max_X, X[i]);
+		min_Y = min(min_Y, Y[i]);
+		max_Y = max(max_Y, Y[i]);
+	}
+
+	rrep(i,1,Q+1) {
+		ll ret1 = abs(X[T[i]] - min_X);
+		ll ret2 = abs(X[T[i]] - max_X);
+		ll ret3 = abs(Y[T[i]] - min_Y);
+		ll ret4 = abs(Y[T[i]] - max_Y);
+		cout << max({ ret1, ret2, ret3, ret4 }) << endl;
+	}
+	return 0;
+}
+```
     
 ## 最長増加部分列
 
@@ -618,34 +672,6 @@ for _ in range(n):
     for wei in range(h+1):
         dp[min(wei+w,h)]=min(dp[min(wei+w,h)],dp[wei]+v)
 print(dp[h])
-```
-
-## 素因数の数
-
-```
-ans,i=1,2
-while i*i<=g:
-    if g%i==0:
-        ans+=1
-        while g%i==0:g//=i
-    i+=1
-print(ans+(g>1))
-```
-
-##　素因数分解
-
-```
-def prime_fact(n):
-    i=2
-    primes=[]
-    while n!=1:
-        cnt=0
-        while n%i==0:
-            cnt+=1    
-            n/=i
-        primes.append([i,cnt])
-        i+=1
-    return primes
 ```
 
 ## 尺取法
@@ -711,6 +737,42 @@ def prime(n):
         if n%i==0:ans.add(i);ans.add(n//i)
     return ans
 ```    
+
+## 素因数の数
+
+```
+ans,i=1,2
+while i*i<=g:
+    if g%i==0:
+        ans+=1
+        while g%i==0:g//=i
+    i+=1
+print(ans+(g>1))
+```
+
+##　素因数分解
+
+```
+def prime_fact(n):
+    i=2
+    primes=[]
+    while n!=1:
+        cnt=0
+        while n%i==0:
+            cnt+=1    
+            n/=i
+        primes.append([i,cnt])
+        i+=1
+    return primes
+```
+
+## 素因数の種類数
+```
+for (int i = 2; i <= N; i++) {
+	if (cnt[i] >= 1) continue;
+	for (int j = i; j <= N; j += i) cnt[j] += 1;
+}
+```
 
 ## 行列積
 
