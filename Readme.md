@@ -133,9 +133,9 @@ int main() {
 	else cout << dp[N][W] << endl;
 	return 0;
 }
-'''
+```
 
-##　遅延評価セグメント木
+## 遅延評価セグメント木
 ```
 class segment_tree {
 private:
