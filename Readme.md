@@ -65,6 +65,55 @@ bool cmp(st p,st q){
 }
 ```
 
+## 2次元累積和
+```
+int main() {
+	int N, K;
+	cin >> N >> K;
+	vector<int> A(N), B(N);
+	for (int i = 0; i < N; ++i) {
+		cin >> A[i] >> B[i];
+	}
+
+    int R = max(*max_element(A.begin(), A.end()), K);
+	int C = max(*max_element(B.begin(), B.end()), K);
+	vector<vector<int> > sum(R + 2, vector<int>(C + 2));
+
+    // 行列の対応する(A,B)のマスに1を代入
+	for (int i = 0; i < N; ++i) {
+		++sum[A[i]][B[i]];
+	}
+
+    // for(int i=0;i<=R+1;i++){
+    //     for(int j=0;j<=C+1;j++) cout<<sum[i][j]<<" ";
+    //     cout<<endl;
+    // }
+    
+    // 2次元累積和
+	for (int i = 1; i <= R+1; ++i) {
+		for (int j = 1; j <= C+1; ++j) {
+			sum[i][j] += sum[i - 1][j];
+		}
+	}
+	for (int i = 1; i <= R+1; ++i) {
+		for (int j = 1; j <= C+1; ++j) {
+			sum[i][j] += sum[i][j - 1];
+		}
+	}
+
+    // 対応する範囲の人数を算出
+	int answer = 0;
+	for (int i = 1; i <= (R+1)-K; ++i) {
+		for (int j = 1; j <= (C+1)-K; ++j) {
+			answer = max(answer, sum[i-1][j-1] + sum[i+K][j+K] - sum[i-1][j+K] - sum[i+K][j-1]);
+		}
+	}
+
+	cout << answer << endl;
+	return 0;
+}
+```
+
 ## unionfind + 隅奇の法則性
 ```
 class union_find {
@@ -204,6 +253,48 @@ int main() {
 }
 ```
 
+## 木DP・部分木の数
+```
+void dfs(int pos, int pre) {
+	long long val1 = 1, val2 = 1;
+	for (int i : G[pos]) {
+		if (i == pre) continue;
+		dfs(i, pos);
+
+		if (C[pos] == 'a') val1 *= (dp[i][0] + dp[i][2]); 
+		if (C[pos] == 'b') val1 *= (dp[i][1] + dp[i][2]);
+        val2 *= (dp[i][0] + dp[i][1] + 2LL * dp[i][2]);
+
+		val1 %= mod;
+		val2 %= mod;
+	}
+
+	if (C[pos] == 'a') dp[pos][0] = val1;
+	if (C[pos] == 'b') dp[pos][1] = val1;
+
+    dp[pos][2] = (val2 - val1 + mod) % mod;
+}
+
+int main() {
+	// Step #1. Input
+	cin >> N;
+	for (int i = 1; i <= N; i++) cin >> C[i];
+	for (int i = 1; i <= N - 1; i++) {
+		cin >> A[i] >> B[i];
+		G[A[i]].push_back(B[i]);
+		G[B[i]].push_back(A[i]);
+	}
+
+	// Step #2. DFS
+	dfs(1, -1);
+    // for(int i=1;i<N+1;i++) {
+    //     for(int j=0;j<3;j++) cout<<dp[i][j]<<" ";
+    //     cout<<endl;
+    // }
+	cout << dp[1][2] << endl;
+	return 0;
+}
+```
 ## 木DP 主客転倒
 ```
 long long N;
