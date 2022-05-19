@@ -8,7 +8,7 @@
 
 ```
 mod=10**9+7  
-inf=10**9  
+inf=10**13
   
 n=int(input())  
 x=list(map(int, input().split()))  
@@ -251,6 +251,63 @@ int main() {
 	cout << Answer << endl;
 	return 0;
 }
+```
+
+## 巡回セールスマン・bitDP
+```
+V, E = map(int, input().split())
+INF = 10**10
+cost = [[INF]*V for _ in range(V)] # 重み
+for e in range(E):
+    s, t, d = map(int,input().split())
+    cost[s][t] = d
+
+dp = [[-1] * V for _ in range(1<<V)] # dp[S][v]
+
+def dfs(S, v, dp):
+    if dp[S][v] != -1: # 訪問済みならメモを返す
+        return dp[S][v]
+    if S==(1<<V)-1 and v==0: # 全ての頂点を訪れて頂点0に戻ってきた
+        return 0 # もう動く必要はない
+
+    res = INF
+    for u in range(V):
+        if S>>u & 1 == 0: # 未訪問かどうか
+            res = min(res, dfs(S|1<<u, u, dp)+cost[v][u])
+    dp[S][v] = res
+    return res
+
+ans = dfs(0, 0, dp) # 頂点0からスタートする。ただし頂点0は未訪問とする
+if ans == INF:
+    print(-1)
+else:
+    print (ans)
+```
+
+## 連鎖行列積問題・dp
+```
+INF = 10**10
+N = int(input())
+dp = [[INF]*N for _ in range(N)]
+R = []
+# 列数=行数でないと計算できない制約故に１次元で良い
+for n in range(N):
+    r, c = map(int,input().split())
+    R.append(r)
+R.append(c)
+
+# print(R)
+
+for i in range(N):
+    dp[i][i] = 0 # 対角成分すなわち、行列積Miを計算するコストは0である
+
+for l in range(1,N): # iとjの差分
+    for i in range(N-l):
+        j = i+l    
+        for k in range(i,j):
+            # cost(左側行列積) + cost(右側行列積) + 行列計算のコスト
+            dp[i][j] = min(dp[i][j], dp[i][k]+dp[k+1][j]+R[i]*R[k+1]*R[j+1]) # 初回はR[0]*R[1]*R[2]
+print (dp[0][-1])
 ```
 
 ## 木DP・部分木の数
@@ -717,6 +774,19 @@ vector<int> Eratosthenes(int n){
 ```
 ## ワーシャルフロイド
 ```
+for (int i = 1; i <= N; i++) {
+	for (int j = 1; j <= N; j++) {
+		if (A[i][j] == -1) dist[i][j] = lens;
+		if (A[i][j] != -1) dist[i][j] = A[i][j];
+	}
+}
+for (int k = 1; k <= N; k++) {
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+	}
+}
+```
+```
 rep(k,10){rep(i,10){rep(j,10){c[i][j]=min(c[i][j],c[i][k]+c[k][j]);}}}
 ```
 
@@ -744,7 +814,18 @@ for i,(a,b) in enumerate(ab):
         for k in range(y+1):
             dp[i+1][j][k]=min(dp[i][j][k],dp[i+1][j][k])
             dp[i+1][min(j+a,x)][min(k+b,y)]=min(dp[i+1][min(j+a,x)][min(k+b,y)],dp[i][j][k]+1)
-```            
+```        
+
+## LIS・双対性
+
+```
+seq=seq[::-1] # 逆順にするとLISに帰着
+LIS = [inf]*n
+for i in range(n):
+    LIS[bisect.bisect_right(LIS, seq[i])] = seq[i]
+    # print(LIS)
+print(bisect.bisect_left(LIS, inf))
+```
 
 ## LIS
 
@@ -838,6 +919,20 @@ for i in range(n):
 ```
 
 ## 応用二分探索：最小の最大だったら最小xに結果がなるように計算してその結果が最大となるように決めていく
+
+```
+long long get_border(long long cnts) {
+	long long cl = 1, cr = 5000000000LL, cm, minx = 5000000000LL;
+	for (int i = 0; i < 40; i++) {
+		cm = (cl + cr) / 2LL;
+		int res = count_number(cm);
+		if (res <= cnts) { cr = cm; minx = min(minx, cm); } //res<=cntsの時のみminを保存することで境界の値を得る
+		else { cl = cm; }
+        // cout<<cl<<" "<<cm<<" "<<cr<<" "<<minx<<" "<<endl;
+	}
+	return minx;
+}
+```
 
 ```
 def f(m):
