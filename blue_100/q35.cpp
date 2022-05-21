@@ -20,8 +20,8 @@ int main(){
             dp[j]=max(dp[j],dp[j-w[i]]+v[i]);
         }
     }
-    for (auto& e:dp) cout<<e<<" ";
-    cout<<endl;
+    // for (auto& e:dp) cout<<e<<" ";
+    // cout<<endl;
     cout<<dp[W]<<endl;
     return 0;
 }
