@@ -7,13 +7,13 @@
 ## 入出力
 
 ```
-mod=10**9+7  
+mod=10**9+7
 inf=float('inf')
   
-n=int(input())  
-x=list(map(int, input().split()))  
-n,m=map(int,input().split())  
-c=[list(map(int, input().split())) for _ in range(n)] 
+n=int(input())
+x=list(map(int, input().split()))
+n,m=map(int,input().split())
+c=[list(map(int, input().split())) for _ in range(n)]
 ```
 
 ```
@@ -252,6 +252,21 @@ int main() {
 	return 0;
 }
 ```
+
+## 共通部分列DP
+```
+x=list(input())
+y=list(input())
+nX,nY=len(x)+1,len(y)+1
+dp = [[0]*nY for _ in range(nX)] 
+for i in range(1,nX):
+for j in range(1,nY):
+    if x[i-1] == y[j-1]:
+	dp[i][j] = dp[i-1][j-1] + 1
+    else:
+	dp[i][j] = max(dp[i][j-1], dp[i-1][j])
+print(dp[-1][-1])
+```    
 
 ## 巡回セールスマン・bitDP
 ```
@@ -738,6 +753,41 @@ int digit_sum(int n){
     }
     return sum;
 }
+```
+
+## 足し引きDP
+```
+n=int(input())
+x=list(map(int, input().split()))
+right=x[-1]
+x=x[:n-1]
+dp=[[0]*21 for _ in range(n-1)]; dp[0][x[0]]=1
+
+for i in range(1,n-1):
+    num=x[i]
+    for j in range(21):
+        if 0<=j-num<21: dp[i][j]+=dp[i-1][j-num]
+        if 0<=j+num<21: dp[i][j]+=dp[i-1][j+num]
+
+print(dp[-1][right])
+```
+
+## 区間DP・円環
+```
+N = int(input())
+A = [int(input()) for _ in range(N)]
+dp = [[0 for _ in range(N)] for _ in range(N)] #dp[i][[j]: A[i]からA[j]のケーキが残っている時のJOIの最大値
+for i in range(N):
+    for l in range(N):
+        ln = (l+1)%N
+        r = (l+i)%N
+        rn = (r-1)%N
+        if (N+i)%2: dp[l][r] = max(dp[ln][r]+A[l], dp[l][rn]+A[r]) # 左端のケーキと右端のケーキで大きい方
+        else: dp[l][r] = dp[ln][r] if A[l]>A[r] else dp[l][rn] #A[l]の方が大きい場合はそちらを取るので、JOIはln~rの中から中から取る事になる
+
+ans = max(dp[i][(i+N-1)%N] for i in range(N)) # 一周の仕方で値が変わるので注意。この中で最大値をansとする
+# for e in dp: print(e)
+print(ans)
 ```
 
 ## 区間DP
