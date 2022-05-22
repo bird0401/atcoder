@@ -65,6 +65,11 @@ bool cmp(st p,st q){
 }
 ```
 
+## 転置
+```
+s=list(zip(*s))
+```
+
 ## 2次元累積和
 ```
 int main() {
@@ -251,6 +256,231 @@ int main() {
 	cout << Answer << endl;
 	return 0;
 }
+```
+
+## 重複DP・それぞれの数に対する最小値
+```
+lim=10**6
+dp=[inf]*lim # dp[i]: 正整数iを表すために必要な最小の正四面体数
+dp[0]=0
+dp_odd=[inf]*lim # 奇数のみ対象
+dp_odd[0]=0
+
+for n in range(1,10**2):
+    w = n*(n+1)*(n+2)//6
+    if w>=10**6: break
+    for i in range(w,lim):
+        v=dp[i-w]+1
+        if dp[i]>v: dp[i]=v
+```
+
+## 条件付き列遷移最小値DP
+```
+dp=[[inf]*4 for _ in range(n+1)] # dp[i][j] i列目まで走査した時に、i列目がj色の時の最小値
+for i in range(4): dp[0][i]=0
+
+for i in range(1,n+1):
+    for j in range(1,4):
+        dp[i][j]=min(dp[i-1][k]+cost[i][j] for k in range(1,4) if j!=k)
+# for e in dp: print(e)
+print(min(dp[-1]))
+```
+
+## 日にち最小値DP
+```
+dp=[[inf]*(n+1) for _ in range(m+1)] # dp[i][j]:i日目に都市jにいるときのコストの最小値
+for i in range(m+1):dp[i][0]=0
+
+for i in range(1,m+1):
+    for j in range(1,n+1):
+        dp[i][j]=min(dp[i-1][j],dp[i-1][j-1]+c[i-1]*d[j-1])
+
+# for e in dp:print(e)
+print(dp[m][n])
+```
+
+## 日にち最大値DP
+```
+dp=[[-inf]*m for _ in range(n+1)] #dp[i][j]: i日目にjの服を着る時の最大値
+for i in range(1,n+1):
+    for j in range(m):
+        low,high,bri=c[j]
+        if low<=t[i-1]<=high: 
+            if i==1: dp[i][j]=0
+            else: dp[i][j]=max(dp[i-1][k]+abs(bri-c[k][2]) for k in range(m))
+# for e in dp: print(e)
+print(max(dp[n]))
+```
+
+## 日にち連続条件dp
+```
+# dp[n][i][j]: iを一日前に食べjを二日前に食べているような、n日目までのパターン数
+# 1,2日目前が存在しない場合に備え、パスタ0を入れておく。パスタ指定とパスタが連続にならないかのみを考えれば良いためこれで成り立つ
+dp = [[[0]*4 for i in range(4)] for j in range(N+1)] 
+dp[0][0][0] = 1
+
+for n in range(1,N+1):
+    for i in range(4):
+        for j in range(4):
+            for k in range(1,4):
+                if (A[n]==0 or A[n]==k) and (k != i or i != j): # パスタが指定されていないか指定のkと同じ場合で、三日連続ではない場合
+                    dp[n][k][i] += dp[n-1][i][j]
+                    dp[n][k][i] %= MOD
+# for e in dp:
+#     print(e)
+
+ans = 0
+for i in range(4): # 最終日、全ての状態の分を足す
+    for j in range(4):
+        ans += dp[-1][i][j]
+        ans %= MOD
+```
+
+## 足し引きDP
+```
+n=int(input())
+x=list(map(int, input().split()))
+right=x[-1]
+x=x[:n-1]
+dp=[[0]*21 for _ in range(n-1)]; dp[0][x[0]]=1
+
+for i in range(1,n-1):
+    num=x[i]
+    for j in range(21):
+        if 0<=j-num<21: dp[i][j]+=dp[i-1][j-num]
+        if 0<=j+num<21: dp[i][j]+=dp[i-1][j+num]
+
+print(dp[-1][right])
+```
+
+## 区間DP・円環
+```
+N = int(input())
+A = [int(input()) for _ in range(N)]
+dp = [[0 for _ in range(N)] for _ in range(N)] #dp[i][[j]: A[i]からA[j]のケーキが残っている時のJOIの最大値
+for i in range(N):
+    for l in range(N):
+        ln = (l+1)%N
+        r = (l+i)%N
+        rn = (r-1)%N
+        if (N+i)%2: dp[l][r] = max(dp[ln][r]+A[l], dp[l][rn]+A[r]) # 左端のケーキと右端のケーキで大きい方
+        else: dp[l][r] = dp[ln][r] if A[l]>A[r] else dp[l][rn] #A[l]の方が大きい場合はそちらを取るので、JOIはln~rの中から中から取る事になる
+
+ans = max(dp[i][(i+N-1)%N] for i in range(N)) # 一周の仕方で値が変わるので注意。この中で最大値をansとする
+# for e in dp: print(e)
+print(ans)
+```
+
+## 区間DP
+```
+// メモ化再帰 dp[l][r]で[l,r)でいくつ取り除けるか
+string s;
+int n;
+vector<vector<int>> dp(301,vector<int>(301,-1));
+int solve(int l,int r){
+    int& res=dp[l][r];
+    if ((r-l)<=2) {res=0;return 0;}
+    if (res!=-1) return res;
+    rrep(m,l+1,r){
+        res=max(res,solve(l,m)+solve(m,r));
+        if (s[l]=='i' && s[m]=='w' && s[r-1]=='i' 
+        && solve(l+1,m)==m-(l+1) && solve(m+1,r-1)==(r-1)-(m+1)) res=r-l; //間の文字が全て取り除ける場合
+    }
+    return res;
+}
+```
+
+## 2人ゲームDP
+```
+dp[A][B]=0;
+// dp[i][j] = Aからi個、Bからj個取った状態から最後までの先攻の最適スコア
+for (int i=A;i>=0;i--) {
+    for (int j=B;j>=0;j--) {
+        if (i==A && j==B) continue;
+        if ((i+j)%2==0){
+            if (i==A) dp[i][j]=dp[i][j+1]+b[j];
+            else if (j==B) dp[i][j]=dp[i+1][j]+a[i];
+            else dp[i][j]=max(dp[i+1][j]+a[i],dp[i][j+1]+b[j]);
+        }
+        else{
+            if (i==A) dp[i][j]=dp[i][j+1];
+            else if (j==B) dp[i][j]=dp[i+1][j];
+            else dp[i][j]=min(dp[i+1][j],dp[i][j+1]);
+        }
+    }
+}
+```
+
+## 部分和2つが対象、以上の場合
+
+```
+for i,(a,b) in enumerate(ab):
+    for j in range(x+1):
+        for k in range(y+1):
+            dp[i+1][j][k]=min(dp[i][j][k],dp[i+1][j][k])
+            dp[i+1][min(j+a,x)][min(k+b,y)]=min(dp[i+1][min(j+a,x)][min(k+b,y)],dp[i][j][k]+1)
+```        
+
+## 最長増加部分列
+
+```
+wh.sort(key=lambda t:(t[0],-t[1]))
+
+from bisect import bisect_left
+l=[]
+for e in a:
+    m=bisect_left(l,e)
+    if m==len(l):l+=[e]
+    else:l[m]=e
+print(l)
+```
+
+## 個数制限付き部分和
+
+```
+dp=[[inf]*m for _ in range(n+1)]
+dp[0][0]=1
+for i in range(n):
+    for j in range(m):
+        t=j+a[i]
+        dp[i+1][t%m]=min(dp[i][t%m],dp[i][j]+t//m)
+print("Yes" if dp[n][l]<=x else "No")
+```
+
+## 最長共通部分列DP
+
+```
+def lcs(s,t):
+    n,m=len(s),len(t)
+    dp=[0]*(m+1)
+    for i in range(n):
+        me=dp[:]
+        for j in range(m):
+            if s[i]==t[j]:dp[j+1]=me[j]+1
+            elif dp[j+1]<dp[j]:dp[j+1]=dp[j]
+    print(dp[m]) 
+```    
+
+## ナップザックdp
+
+```
+dp=[0]*(W+1)
+for _ in range(n):
+    v,w=map(int, input().split())
+    for wei in range(W,w-1,-1):
+        dp[wei]=max(dp[wei],dp[wei-w]+v)
+print(dp[W])
+```
+
+## 個数制限なしナップザックDP
+
+```
+dp=[0]*(W+1)  
+for _ in range(N): 
+    v,w=map(int, input().split())
+    for wei in range(w,W+1):
+        dp[wei]=max(dp[wei],dp[wei-w]+v)
+print(dp[W])
 ```
 
 ## 共通部分列DP
@@ -755,81 +985,6 @@ int digit_sum(int n){
 }
 ```
 
-## 足し引きDP
-```
-n=int(input())
-x=list(map(int, input().split()))
-right=x[-1]
-x=x[:n-1]
-dp=[[0]*21 for _ in range(n-1)]; dp[0][x[0]]=1
-
-for i in range(1,n-1):
-    num=x[i]
-    for j in range(21):
-        if 0<=j-num<21: dp[i][j]+=dp[i-1][j-num]
-        if 0<=j+num<21: dp[i][j]+=dp[i-1][j+num]
-
-print(dp[-1][right])
-```
-
-## 区間DP・円環
-```
-N = int(input())
-A = [int(input()) for _ in range(N)]
-dp = [[0 for _ in range(N)] for _ in range(N)] #dp[i][[j]: A[i]からA[j]のケーキが残っている時のJOIの最大値
-for i in range(N):
-    for l in range(N):
-        ln = (l+1)%N
-        r = (l+i)%N
-        rn = (r-1)%N
-        if (N+i)%2: dp[l][r] = max(dp[ln][r]+A[l], dp[l][rn]+A[r]) # 左端のケーキと右端のケーキで大きい方
-        else: dp[l][r] = dp[ln][r] if A[l]>A[r] else dp[l][rn] #A[l]の方が大きい場合はそちらを取るので、JOIはln~rの中から中から取る事になる
-
-ans = max(dp[i][(i+N-1)%N] for i in range(N)) # 一周の仕方で値が変わるので注意。この中で最大値をansとする
-# for e in dp: print(e)
-print(ans)
-```
-
-## 区間DP
-```
-// メモ化再帰 dp[l][r]で[l,r)でいくつ取り除けるか
-string s;
-int n;
-vector<vector<int>> dp(301,vector<int>(301,-1));
-int solve(int l,int r){
-    int& res=dp[l][r];
-    if ((r-l)<=2) {res=0;return 0;}
-    if (res!=-1) return res;
-    rrep(m,l+1,r){
-        res=max(res,solve(l,m)+solve(m,r));
-        if (s[l]=='i' && s[m]=='w' && s[r-1]=='i' 
-        && solve(l+1,m)==m-(l+1) && solve(m+1,r-1)==(r-1)-(m+1)) res=r-l; //間の文字が全て取り除ける場合
-    }
-    return res;
-}
-```
-
-## 2人ゲームDP
-```
-dp[A][B]=0;
-// dp[i][j] = Aからi個、Bからj個取った状態から最後までの先攻の最適スコア
-for (int i=A;i>=0;i--) {
-    for (int j=B;j>=0;j--) {
-        if (i==A && j==B) continue;
-        if ((i+j)%2==0){
-            if (i==A) dp[i][j]=dp[i][j+1]+b[j];
-            else if (j==B) dp[i][j]=dp[i+1][j]+a[i];
-            else dp[i][j]=max(dp[i+1][j]+a[i],dp[i][j+1]+b[j]);
-        }
-        else{
-            if (i==A) dp[i][j]=dp[i][j+1];
-            else if (j==B) dp[i][j]=dp[i+1][j];
-            else dp[i][j]=min(dp[i+1][j],dp[i][j+1]);
-        }
-    }
-}
-```
-
 ## nからk個を区別する場合の分け方
 
 ```
@@ -901,16 +1056,6 @@ return maxsum
 ```
 sorted(s,key=lambda S:[x.index(c) for c in S])
 ```
-
-## 部分和2つが対象、以上の場合
-
-```
-for i,(a,b) in enumerate(ab):
-    for j in range(x+1):
-        for k in range(y+1):
-            dp[i+1][j][k]=min(dp[i][j][k],dp[i+1][j][k])
-            dp[i+1][min(j+a,x)][min(k+b,y)]=min(dp[i+1][min(j+a,x)][min(k+b,y)],dp[i][j][k]+1)
-```        
 
 ## LIS・双対性
 
@@ -1139,68 +1284,6 @@ int main() {
 	}
 	return 0;
 }
-```
-    
-## 最長増加部分列
-
-```
-wh.sort(key=lambda t:(t[0],-t[1]))
-
-from bisect import bisect_left
-l=[]
-for e in a:
-    m=bisect_left(l,e)
-    if m==len(l):l+=[e]
-    else:l[m]=e
-print(l)
-```
-
-## 個数制限付き部分和
-
-```
-dp=[[inf]*m for _ in range(n+1)]
-dp[0][0]=1
-for i in range(n):
-    for j in range(m):
-        t=j+a[i]
-        dp[i+1][t%m]=min(dp[i][t%m],dp[i][j]+t//m)
-print("Yes" if dp[n][l]<=x else "No")
-```
-
-## 最長部分列
-
-```
-def lcs(s,t):
-    n,m=len(s),len(t)
-    dp=[0]*(m+1)
-    for i in range(n):
-        me=dp[:]
-        for j in range(m):
-            if s[i]==t[j]:dp[j+1]=me[j]+1
-            elif dp[j+1]<dp[j]:dp[j+1]=dp[j]
-    print(dp[m]) 
-```    
-
-## ナップザックdp
-
-```
-dp=[0]*(W+1)
-for _ in range(n):
-    v,w=map(int, input().split())
-    for wei in range(W,w-1,-1):
-        dp[wei]=max(dp[wei],dp[wei-w]+v)
-print(dp[W])
-```
-
-## 個数制限なしナップザック
-
-```
-dp=[0]*(W+1)  
-for _ in range(N): 
-    v,w=map(int, input().split())
-    for wei in range(w,W+1):
-        dp[wei]=max(dp[wei],dp[wei-w]+v)
-print(dp[W])
 ```
 
 ## 尺取法
