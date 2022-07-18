@@ -9,4 +9,5 @@ for i in range(1,n-1):
     for j in range(21):
         if 0<=j-num<21: dp[i][j]+=dp[i-1][j-num]
         if 0<=j+num<21: dp[i][j]+=dp[i-1][j+num]
+
 print(dp[-1][right])
